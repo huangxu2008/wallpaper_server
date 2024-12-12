@@ -1,19 +1,17 @@
 package main
 
 import (
-	"wallpaper_server/router"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	r := router.Router()
+	r := gin.Default()
 
-	// defer recover panic nil
-
-	// defer fmt.Println(1)
-	// defer fmt.Println(2)
-	// defer fmt.Println(3)
-
-	// panic("11")
+	r.GET("/url", func(ctx *gin.Context) {
+		ctx.String(http.StatusOK, "hello go")
+	})
 
 	r.Run(":9999")
 }
