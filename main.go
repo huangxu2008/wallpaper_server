@@ -9,7 +9,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	r.GET("/url", func(ctx *gin.Context) {
+	r.GET("/", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "hello go")
 	})
 
