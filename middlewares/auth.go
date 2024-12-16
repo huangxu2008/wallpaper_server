@@ -1,33 +1,31 @@
 package middlewares
 
 import (
-	"net/http"
 	"strings"
+	"wallpaper_server/controller"
 	"wallpaper_server/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-// Token 验证中间件
+// token验证中间件
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is required"})
+			controller.ReturnLoginError(c, 4004, "Authorization header is required")
 			c.Abort()
 			return
 		}
-
-		// 解析 Token
+		// 解析token
 		token := strings.TrimPrefix(authHeader, "Bearer ")
 		userID, err := utils.ValidateToken(token)
 		if err != nil {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
+			controller.ReturnLoginError(c, 4004, "Invalid or expired token")
 			c.Abort()
 			return
 		}
-
-		// 将用户 ID 存入上下文
+		// 将用户ID存入上下文
 		c.Set("userID", userID)
 		c.Next()
 	}

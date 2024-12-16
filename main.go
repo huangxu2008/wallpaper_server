@@ -1,17 +1,15 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"wallpaper_server/router"
 )
 
 func main() {
-	r := gin.Default()
-
-	r.GET("/", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "hello go")
-	})
-
-	r.Run(":9999")
+	r := router.Router()
+	if r == nil {
+		/// to modify 输出日志，报错，退出服务，记录时间
+	} else {
+		/// to modify 输出日志，正确，启动服务，记录时间
+		r.Run(":9999")
+	}
 }

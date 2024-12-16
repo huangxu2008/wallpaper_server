@@ -22,7 +22,6 @@ func init() {
 	if Db.Error != nil {
 		logger.Error(map[string]interface{}{"databse connect error": Db.Error})
 	}
-
 	Db.DB().SetMaxIdleConns(10)
 	Db.DB().SetMaxOpenConns(100)
 	Db.DB().SetConnMaxLifetime(time.Hour)
