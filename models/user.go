@@ -10,9 +10,8 @@ type WallpaperUser struct {
 	UserID    uint `gorm:"primaryKey;autoIncrement"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	DeletedAt *time.Time `sql:"index"`
-	Username  string     `gorm:"unique" json:"username"`
-	Password  string     `json:"password"`
+	Username  string `gorm:"unique" json:"username"`
+	Password  string `json:"password"`
 }
 
 func (WallpaperUser) TableName() string {
