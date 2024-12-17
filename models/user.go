@@ -1,16 +1,18 @@
 package models
 
 import (
+	"time"
 	"wallpaper_server/dao"
 	"wallpaper_server/utils"
-
-	"github.com/jinzhu/gorm"
 )
 
 type WallpaperUser struct {
-	gorm.Model
-	Username string `gorm:"unique" json:"username"`
-	Password string `json:"password"`
+	UserID    uint `gorm:"primaryKey;autoIncrement"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time `sql:"index"`
+	Username  string     `gorm:"unique" json:"username"`
+	Password  string     `json:"password"`
 }
 
 func (WallpaperUser) TableName() string {
@@ -23,7 +25,7 @@ func GetUserToken(username string, password string) (string, error) {
 		return "Invalid username or password", err
 	}
 	// 生成token
-	token, err := utils.GenerateToken(users.ID)
+	token, err := utils.GenerateToken(users.UserID)
 	if err != nil {
 		return "Failed to generate token", err
 	}
