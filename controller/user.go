@@ -12,19 +12,19 @@ type WallpaperUserController struct{}
 func (wuc WallpaperUserController) Login(c *gin.Context) {
 	// 验证用户名密码
 	var input struct {
-		Username string `json:"username"`
+		Username string `json:"userName"`
 		Password string `json:"password"`
 	}
 	if err := c.ShouldBindJSON(&input); err != nil {
 		ReturnLoginError(c, 4004, "Invalid input")
 		return
 	}
-	token, err := models.GetUserToken(input.Username, input.Password)
+	users, token, err := models.GetUserToken(input.Username, input.Password)
 	if err != nil {
 		ReturnLoginError(c, 4004, token)
 		return
 	}
-	ReturnLoginSuccess(c, 0, "success", token)
+	ReturnLoginSuccess(c, 0, users.UserID, users.NameCn, token)
 }
 
 // 用户信息接口

@@ -8,9 +8,10 @@ type JsonLoginErrorStruct struct {
 }
 
 type JsonLoginSuccessStruct struct {
-	Code  int         `json:"code"`
-	Msg   interface{} `json:"msg"`
-	Token interface{} `json:"token"`
+	Code   int         `json:"code"`
+	UserID uint        `json:"userId"`
+	NameCn interface{} `json:"nameCn"`
+	Token  interface{} `json:"token"`
 }
 
 func ReturnLoginError(c *gin.Context, code int, msg interface{}) {
@@ -18,7 +19,7 @@ func ReturnLoginError(c *gin.Context, code int, msg interface{}) {
 	c.JSON(200, json)
 }
 
-func ReturnLoginSuccess(c *gin.Context, code int, msg interface{}, token interface{}) {
-	json := &JsonLoginSuccessStruct{Code: code, Msg: msg, Token: token}
+func ReturnLoginSuccess(c *gin.Context, code int, id uint, name interface{}, token interface{}) {
+	json := &JsonLoginSuccessStruct{Code: code, UserID: id, NameCn: name, Token: token}
 	c.JSON(200, json)
 }
