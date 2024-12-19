@@ -13,7 +13,7 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			controller.ReturnLoginError(c, 4004, "Authorization header is required")
+			controller.ReturnCommonError(c, 4004, "error", "Authorization header is required")
 			c.Abort()
 			return
 		}
@@ -21,7 +21,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		token := strings.TrimPrefix(authHeader, "Bearer ")
 		userID, err := utils.ValidateToken(token)
 		if err != nil {
-			controller.ReturnLoginError(c, 4004, "Invalid or expired token")
+			controller.ReturnCommonError(c, 4004, "error", "Invalid or expired token")
 			c.Abort()
 			return
 		}

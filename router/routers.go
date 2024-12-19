@@ -3,6 +3,7 @@ package router
 import (
 	"wallpaper_server/config"
 	"wallpaper_server/controller"
+	"wallpaper_server/middlewares"
 	"wallpaper_server/models"
 	"wallpaper_server/pck/logger"
 
@@ -25,7 +26,10 @@ func Router() *gin.Engine {
 		user := r.Group("wallpaper/user")
 		{
 			user.POST("/login", controller.WallpaperUserController{}.Login)
-			user.GET("/profile", controller.WallpaperUserController{}.Profile)
+		}
+		task := r.Group("wallpaper/task", middlewares.AuthMiddleware())
+		{
+			task.POST("/taskCreate", controller.WallpaperTaskController{}.CreateTask)
 		}
 
 	}

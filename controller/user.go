@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"net/http"
 	"wallpaper_server/models"
 
 	"github.com/gin-gonic/gin"
@@ -16,19 +15,13 @@ func (wuc WallpaperUserController) Login(c *gin.Context) {
 		Password string `json:"password"`
 	}
 	if err := c.ShouldBindJSON(&input); err != nil {
-		ReturnLoginError(c, 4004, "Invalid input")
+		ReturnLoginError(c, 4004, "error", "Invalid input")
 		return
 	}
 	users, token, err := models.GetUserToken(input.Username, input.Password)
 	if err != nil {
-		ReturnLoginError(c, 4004, token)
+		ReturnLoginError(c, 4004, "error", token)
 		return
 	}
 	ReturnLoginSuccess(c, 0, users.UserID, users.NameCn, token)
-}
-
-// 用户信息接口
-func (u WallpaperUserController) Profile(c *gin.Context) {
-	userID, _ := c.Get("userID")
-	c.JSON(http.StatusOK, gin.H{"message": "Welcome to your profile", "userID": userID})
 }
