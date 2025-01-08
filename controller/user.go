@@ -15,12 +15,12 @@ func (wuc WallpaperUserController) Login(c *gin.Context) {
 		Password string `json:"password"`
 	}
 	if err := c.ShouldBindJSON(&input); err != nil {
-		ReturnLoginError(c, 4004, "error", "Invalid input")
+		ReturnLoginError(c, 4001, "error", "Invalid input")
 		return
 	}
 	users, token, err := models.GetUserToken(input.Username, input.Password)
 	if err != nil {
-		ReturnLoginError(c, 4004, "error", token)
+		ReturnLoginError(c, 4002, "error", token)
 		return
 	}
 	ReturnLoginSuccess(c, 0, users.UserID, users.NameCn, token)

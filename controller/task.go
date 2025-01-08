@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -79,6 +80,47 @@ func (wtc WallpaperTaskController) CreateTask(c *gin.Context) {
 	// 判断格式，如果上传的参数有问题，那么返回错误
 	if imgFormat == "url" {
 
+		imageURLs := []string{
+			"https://iknow-pic.cdn.bcebos.com/730e0cf3d7ca7bcba60a76b1ac096b63f624a83f",
+			"https://iknow-pic.cdn.bcebos.com/838ba61ea8d3fd1fa2f429a4224e251f94ca5fab",
+			"https://iknow-pic.cdn.bcebos.com/d833c895d143ad4beeb4e85e90025aafa50f0691",
+			"https://iknow-pic.cdn.bcebos.com/f7246b600c338744af69eee1430fd9f9d62aa0fb",
+			"https://iknow-pic.cdn.bcebos.com/4afbfbedab64034f1dbe899bbdc379310a551d3f",
+		}
+		// 创建文件保存目录（如果不存在）
+		dir := "./uploaded_images"
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+			ReturnCommonError(c, 4004, "error", "Unable to create directory")
+			return
+		}
+		// 创建一个无缓冲的通道来接收下载通知
+		notifications := make(chan downloadImageNotification)
+		// 创建一个WaitGroup来等待所有下载完成
+		var wg sync.WaitGroup
+		// 为每个 URL 启动一个 goroutine 来下载图片
+		for _, url := range imageURLs {
+			wg.Add(1) // 增加 WaitGroup 的计数器
+			go func(url string) {
+				defer wg.Done()
+				downloadImage(url, dir, notifications)
+			}(url)
+		}
+		// 创建一个 goroutine 来关闭通知通道，当所有下载都完成时
+		go func() {
+			wg.Wait() // 等待所有下载都完成
+			close(notifications)
+		}()
+		// 在另一个 goroutine 中监听通知通道，并处理通知
+		go func() {
+			for notification := range notifications {
+				if notification.Error != nil {
+					fmt.Printf("下载失败: URL=%s, 文件名=%s, 错误=%v\n", notification.URL, notification.FileName, notification.Error)
+				} else {
+					fmt.Printf("下载成功: URL=%s, 文件名=%s\n", notification.URL, notification.FileName)
+				}
+			}
+		}()
+		fmt.Printf("返回结果\n")
 	} else {
 		form, err := c.MultipartForm()
 		if err != nil {
