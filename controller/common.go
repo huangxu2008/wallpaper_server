@@ -2,6 +2,36 @@ package controller
 
 import "github.com/gin-gonic/gin"
 
+type JsonCommonError struct {
+	ErrorCode int    `json:"errorCode"`
+	Message   string `json:"message"`
+	Status    string `json:"status"`
+}
+
+type JsonCommonSuccess struct {
+	ErrorCode int         `json:"errorCode"`
+	Message   string      `json:"message"`
+	Status    string      `json:"status"`
+	Data      interface{} `json:"data"`
+}
+
+type JsonLogin struct {
+	NameEn string `json:"nameEn"`
+	NameCn string `json:"nameCn"`
+	UserId uint   `json:"userId"`
+	Token  string `json:"token"`
+}
+
+func ReturnJsonCommonError(c *gin.Context, errorCode int, message string, status string) {
+	json := &JsonCommonError{ErrorCode: errorCode, Message: message, Status: status}
+	c.JSON(200, json)
+}
+
+func ReturnJsonCommonSuccess(c *gin.Context, errorCode int, message string, status string, data interface{}) {
+	json := &JsonCommonSuccess{ErrorCode: errorCode, Message: message, Status: status, Data: data}
+	c.JSON(200, json)
+}
+
 type JsonCommonErrorStruct struct {
 	Code    int         `json:"code"`
 	Status  interface{} `json:"status"`

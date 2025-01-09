@@ -31,6 +31,10 @@ func Router() *gin.Engine {
 		{
 			task.POST("/taskCreate", controller.WallpaperTaskController{}.CreateTask)
 		}
+		menu := r.Group("wallpaper/menu", middlewares.AuthMiddleware())
+		{
+			menu.GET("", controller.WallpaperMenuController{}.GetMenu)
+		}
 
 	}
 	return r

@@ -10,18 +10,25 @@ type WallpaperUserController struct{}
 
 func (wuc WallpaperUserController) Login(c *gin.Context) {
 	// 验证用户名密码
-	var input struct {
-		Username string `json:"userName"`
-		Password string `json:"password"`
-	}
-	if err := c.ShouldBindJSON(&input); err != nil {
-		ReturnLoginError(c, 4001, "error", "Invalid input")
+	userName := c.DefaultPostForm("userName", "")
+	password := c.DefaultPostForm("password", "")
+
+	if userName == "" {
+		ReturnJsonCommonError(c, 401, "Username is empty", "error")
 		return
 	}
-	users, token, err := models.GetUserToken(input.Username, input.Password)
+
+	if password == "" {
+		ReturnJsonCommonError(c, 401, "Password is empty", "error")
+		return
+	}
+
+	users, token, err := models.GetUserToken(userName, password)
 	if err != nil {
-		ReturnLoginError(c, 4002, "error", token)
+		ReturnJsonCommonError(c, 401, token, "error")
 		return
 	}
-	ReturnLoginSuccess(c, 0, users.UserID, users.NameCn, token)
+
+	data := &JsonLogin{NameEn: users.NameEn, NameCn: users.NameCn, UserId: users.UserID, Token: token}
+	ReturnJsonCommonSuccess(c, 200, "", "success", data)
 }
