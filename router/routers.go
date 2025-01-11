@@ -23,19 +23,18 @@ func Router() *gin.Engine {
 		r.Use(logger.Recover)
 
 		// 设置路由
-		user := r.Group("wallpaper/user")
+		user := r.Group("wallpaper/users")
 		{
 			user.POST("/login", controller.WallpaperUserController{}.Login)
 		}
-		task := r.Group("wallpaper/task", middlewares.AuthMiddleware())
+		task := r.Group("wallpaper/tasks", middlewares.AuthMiddleware())
 		{
 			task.POST("/taskCreate", controller.WallpaperTaskController{}.CreateTask)
 		}
-		menu := r.Group("wallpaper/menu", middlewares.AuthMiddleware())
+		menu := r.Group("wallpaper/menus", middlewares.AuthMiddleware())
 		{
 			menu.GET("", controller.WallpaperMenuController{}.GetMenu)
 		}
-
 	}
 	return r
 }

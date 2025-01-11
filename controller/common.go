@@ -22,6 +22,16 @@ type JsonLogin struct {
 	Token  string `json:"token"`
 }
 
+type JsonMenuItem struct {
+	MenuID      uint           `json:"menu_id"`
+	Name        string         `json:"name"`
+	Path        string         `json:"path"`
+	ParentID    uint           `json:"parent_id"`
+	SortOrder   uint           `json:"sort_order"`
+	Description string         `json:"description"`
+	SubData     []JsonMenuItem `json:"sub_data"`
+}
+
 func ReturnJsonCommonError(c *gin.Context, errorCode int, message string, status string) {
 	json := &JsonCommonError{ErrorCode: errorCode, Message: message, Status: status}
 	c.JSON(200, json)
