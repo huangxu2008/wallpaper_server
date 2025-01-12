@@ -23,13 +23,17 @@ type JsonLogin struct {
 }
 
 type JsonMenuItem struct {
-	MenuID      uint           `json:"menu_id"`
+	MenuID      uint           `json:"menuId"`
 	Name        string         `json:"name"`
 	Path        string         `json:"path"`
-	ParentID    uint           `json:"parent_id"`
-	SortOrder   uint           `json:"sort_order"`
+	ParentID    uint           `json:"parentId"`
+	SortOrder   uint           `json:"sortOrder"`
 	Description string         `json:"description"`
-	SubData     []JsonMenuItem `json:"sub_data"`
+	SubData     []JsonMenuItem `json:"subData"`
+}
+
+type JsonCreateTask struct {
+	TaskID uint `json:"taskId"`
 }
 
 func ReturnJsonCommonError(c *gin.Context, errorCode int, message string, status string) {
@@ -48,19 +52,6 @@ type JsonCommonErrorStruct struct {
 	Message interface{} `json:"message"`
 }
 
-type JsonLoginErrorStruct struct {
-	Code    int         `json:"code"`
-	Status  interface{} `json:"status"`
-	Message interface{} `json:"message"`
-}
-
-type JsonLoginSuccessStruct struct {
-	Code   int         `json:"code"`
-	UserID uint        `json:"userId"`
-	NameCn interface{} `json:"nameCn"`
-	Token  interface{} `json:"token"`
-}
-
 type JsonCreateTaskErrorStruct struct {
 	Code    int         `json:"code"`
 	Status  interface{} `json:"status"`
@@ -75,21 +66,6 @@ type JsonCreateTaskSuccessStruct struct {
 
 func ReturnCommonError(c *gin.Context, code int, status interface{}, message interface{}) {
 	json := &JsonCommonErrorStruct{Code: code, Status: status, Message: message}
-	c.JSON(200, json)
-}
-
-func ReturnLoginError(c *gin.Context, code int, status interface{}, msg interface{}) {
-	json := &JsonLoginErrorStruct{Code: code, Status: status, Message: msg}
-	c.JSON(200, json)
-}
-
-func ReturnLoginSuccess(c *gin.Context, code int, id uint, name interface{}, token interface{}) {
-	json := &JsonLoginSuccessStruct{Code: code, UserID: id, NameCn: name, Token: token}
-	c.JSON(200, json)
-}
-
-func ReturnCreateTaskError(c *gin.Context, code int, status interface{}, message interface{}) {
-	json := &JsonCreateTaskErrorStruct{Code: code, Status: status, Message: message}
 	c.JSON(200, json)
 }
 

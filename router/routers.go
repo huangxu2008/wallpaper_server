@@ -29,7 +29,7 @@ func Router() *gin.Engine {
 		}
 		task := r.Group("wallpaper/tasks", middlewares.AuthMiddleware())
 		{
-			task.POST("/taskCreate", controller.WallpaperTaskController{}.CreateTask)
+			task.POST("/createTask", controller.WallpaperTaskController{}.CreateTask)
 		}
 		menu := r.Group("wallpaper/menus", middlewares.AuthMiddleware())
 		{
